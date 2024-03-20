@@ -1,0 +1,183 @@
+2018-03-24 Brian Cox <bcox@tripwire.com>
+	* Update version to 2.4.3.7
+	* Provide a useful README.md (Github issue #17).
+	* Document return codes in man pages (Github issue #28).
+	* Update install script after testing on additional platforms.
+	* Provide default policies for more operating systems, and update some existing policies
+	* Usability tweaks to twtest.
+	* Fix email reporting on Syllable
+	* Update copyright dates to 2018
+	* Clean up code style with clang-format, & add a custom style that approximates existing OST usage.
+	* Add -t / --output-level option to print-db mode, for consistency w/ print-report mode.
+	* Add object list support to print-report mode, for consistency w/ print-db mode.
+
+2017-10-01 Brian Cox <bcox@tripwire.com>
+	* Update version to 2.4.3.6
+	* Fix & expand tests in Perl acceptance test framework
+	* Fix & expand twtest unit tests, & rework unit test mini-framework so they’re referenced by name, not some numeric ID, and list tests as “skipped" if they don’t make any test assertions.
+	* Add configure options to enable coverage, profiling, & use /dev/urandom as RNG (all off by default)
+	* Add a ‘list’ make target to list all make targets
+	* Remove dead code & add test coverage per gcov+lcov results
+	* Fix various memory issues pointed out by valgrind
+	* In examine-encryption mode, better reporting (& nonzero exit) if we can't find a keyfile for the examined file.
+	* More exception handling around individual objects & init/IC as a whole, since there have been occasional reports of uncaught exceptions during init or check, and so far haven’t been able to repro or figure out what circumstances it occurs under. (e.g. Github issue #25)
+	* Tweak install.sh so it can be run directly, not just thru 'make install' if you want. (Github issue #26)
+	* Improve native (non-Posixy) path handling on platforms that need it (DOS, AROS, RISC OS, Redox)
+	* New platforms:  MirOS BSD, Bitrig, LibertyBSD, RISC OS, Redox
+	* Add default policies for HP-UX & various BSDs
+
+2017-03-30 Brian Cox <bcox@tripwire.com>
+	* Bump version to 2.4.3.5
+	* Fix ‘install-strip’, ‘check’, ‘uninstall’, and ‘distcheck’ make targets.
+	* Fix GCC 7.0.x warnings; use std::unique_ptr instead of deprecated std::auto_ptr where available.
+	* Add ‘--disable-extrawarnings’ configure option, for old compilers that don’t support the ’-Wextra’ compile option.
+	* Clean up unit tests & enable disabled tests.
+	* Address more static analyzer warnings, including from CppCheck & Flawfinder
+
+2017-03-05 Brian Cox <bcox@tripwire.com>
+	* Bump version to 2.4.3.4
+	* Fix issue with printing level 2 reports, introduced by fixing a Clang static analyzer quibble in 2.4.3.3. Sigh.
+	* 'make install-strip' actually strips binaries now.
+
+2017-02-21 Brian Cox <bcox@tripwire.com>
+	* Bump version to 2.4.3.3
+	* Run Clang static analyzer & fix some of its quibbles
+	* Fix compilation error on Alpine Linux 3.x
+	* Fix file permissions on a couple of source files
+	* Fix some errors w/ make install/uninstall/dist
+
+2017-01-15 Brian Cox <bcox@tripwire.com>
+	* Bump version to 2.4.3.2
+	* DOS/DJGPP platform support.
+	* Use posix_fadvise() to reduce disk cache impact (where available).
+	* Use O_NOATIME where available, so scans don't update file access times.
+	* Optional HASH_DIRECT_IO (Linux only) to access files via direct i/o when hashing, per user request.
+	* Optional support for iconv character conversion, for db/report file portability.
+	* Improved display of multibyte characters in reports.
+	* On OSX, use builtin CommonCrypto hashes instead of impls provided with OST.
+	* Update build system to automake 1.15
+	* Cross compiling can use OpenSSL now.
+	* 'make dist' now creates a buildable source bundle.
+	* Can use build dir outside of source tree
+	* Include 'what'-style version strings.
+	* AROS: Correctly hide passphrases & delete temp files.
+	* Remove dead code & unused files.
+	* Optional RESOLVE_IDS_TO_NAMES option to disable uid/gid to name resolution, if needed.
+	* New --key-size option to twadmin --generate-keys, to generate 1024 (default) or 2048 bit El Gamal keys. 
+	
+2016-04-20 Brian Cox <bcox@tripwire.com>
+	* Bump version to 2.4.3.1
+	* Revive old 'twtest' unit test suite (such as it is); move _t.cpp files into twtest dir.
+	* Fix -Wnarrowing warnings in yyparse.cpp - GCC 6 would treat these as errors.
+	* Build with -Wextra to enable more warnings.
+	* Fix a variety of other compiler warnings, some exposed by -Wextra, others preexisting.
+	* Replace remaining tabs w/ 4 spaces. Mixing the 2 styles can now cause GCC 6 'misleading indentation' warnings.
+
+2016-04-11 Brian Cox <bcox@tripwire.com>
+	* Bump version to 2.4.3.0
+	* Compilation fixes for gcc 4.7+ and LLVM/clang 
+	(see http://www.linuxfromscratch.org/blfs/view/svn/postlfs/tripwire.html )
+	* Absorb fixes from FreeBSD ports patchset
+	(see http://svnweb.freebsd.org/ports/head/security/tripwire/ )
+	* Fix handling of SHA hashes (with and without OpenSSL hash impl.)
+	* Update GNU config.guess & config.sub to current versions
+	* Compilation fixes for various and sundry Posix-esque platforms
+	(Mac OS X, OpenBSD, OpenSolaris, Cygwin, Minix 3.x, GNU/Hurd, MidnightBSD, Haiku, Syllable, SkyOS, Sortix, MiNT)  
+	* Add script to bump buildys file timestaps, to fix 
+	spurious aclocal/automake errors on a fresh clone/untar/etc.
+	* Update 'make dist' to bundle manpages & policy files
+	* Replace broken RPM spec w/ 'Packaging' doc that explains where to get packaging stuff.
+	* Add contributed files from 2.4.2.3 fork (see below)
+	* Fix large file support on e.g. 32-bit Linux
+	* Add '-h' option to display hashes as hex instead of base64
+	* Add MAILFROMADDRESS config param (see twconfig man page)
+	* Use O_NONBLOCK, to avoid blocking on fifos & mandatory-locked files
+	* Report Solaris door & event port file types correctly
+
+2014-01-01 Barry Allard <barry.allard@gmail.com>
+
+	* Bumping version to 2.4.2.3
+	* Fixed compilation on clang and gcc compilers
+
+2011-11-21 Stephane Dudzinski <tripwire@frlinux.net>
+
+	* Bumping version to 2.4.2.2
+	* Updated version revision in reports and all
+	* Added experimental policy creation (see policy/policy_generator_readme.txt)
+	* Fixed report formating and sendmail issues
+	* Added Debian patches for crypto and hostnames
+	* Fixed compiling issue on recent GCC compilers (-fpermissive)
+
+2011-07-14 Stephane Dudzinski <tripwire@frlinux.net>
+
+	* Bumping version to 2.4.2.1
+	* Fixed version numbering and added RPM spec file
+
+2010-03-11 Stephane Dudzinski <tripwire@frlinux.net>
+
+	* Bumping version to 2.4.2
+	* Added patch to fix bug [ 1962485 ] Cannot change or expect-script
+	passphrases - thanks to Ross Tyler (rtyle)
+	* Removed RPM spec file for now, will be fixed in next release
+
+2007-04-16 Ron Forrester <rjf@theforrest.org>
+
+	* Bumping all versions to 2.4.1.2
+	* Fixed bug in install script when sendmail isn't installed
+	  target system.
+	* Removed some non-existent files from installer
+
+2005-08-18 Ron Forrester <rjf@theforrest.org>
+
+	* Wow, has it been 4+ years? :)
+	* Starting fresh with Paul's autoconf'ed code base
+	* Bumped version number, misc cleanup, etc.
+
+2001-02-25  Ron Forrester  <rjf@theforrest.org>
+
+	* Bumped version to 2.3.1.
+
+	* BSD support, thanks to Paul Herman <pherman@frenchfries.net>.
+	The support was added for FreeBSD 4.2, your mileage may vary on
+	other BSD's.
+
+	* Fixed long standing bug with recurse=3
+
+	* If TEMPDIRECTORY was missing trailing /, bad things could
+	happen. Tripwire now appends a / if one isn't present. Thanks
+	Jarno.
+
+	* Fixed GLOBALEMAIL bug where no global emails would be sent
+	unless there were emailto attributes somewhere in the policy
+	file. Additionally, reports were being sliced to global
+	recipients, despite the fact that global recipients should get
+	the full report.
+
+2001-02-03  Ron Forrester  <rjf@theforrest.org>
+
+	* Fixed possible security problem with the handling of temp
+	files. We now open temp files with O_EXCL set to make sure a
+	particular file doesn't already exist. Thanks to Jarno for this
+	suggestion and help via a patch.
+
+	* Added the configuration file variable TEMPDIRECTORY. This
+	variable can be set to the full path to where tripwire should
+	write its temporary files. By default it is /tmp. Because /tmp has
+	to be world writable, this isn't a good place for tripwire to
+	write temporary files. Setting TEMPDIRECTORY to a directory with
+	permissions 700 is much more secure. Updated man page with info on
+	this variable.
+
+	* Added the configuration file variable GLOBALEMAIL. This variable
+	can be set to a list of email addresses which are semi-colon or
+	comma separated. If a report is about to be emailed to addresses
+	reaped from the policy file, it will also be emailed to the
+	addresses in the GLOBALEMAIL list, allowing designation of one or
+	more people to always get email reports. Updated the man page with
+	info on this variable.
+
+	* Began a convention of providing a "Solution:" line to all errors
+	(exceptions) emitted by tripwire. Only the two latest error
+	messages incorporate this convention, but all future ones will as
+	well, and I hope to revist all current errors and retrofit them
+	with Solution: lines as well.

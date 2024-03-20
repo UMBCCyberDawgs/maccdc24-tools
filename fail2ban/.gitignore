@@ -1,0 +1,13 @@
+*~
+build
+dist
+*.pyc
+htmlcov
+.coverage
+*.orig
+*.rej
+*.bak
+__pycache__
+.vagrant/
+.idea/
+.venv/

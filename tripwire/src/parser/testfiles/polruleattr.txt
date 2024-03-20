@@ -1,0 +1,4 @@
+(emailto=root@localhost) 
+{
+	/foo		->		+pinugs ;
+}

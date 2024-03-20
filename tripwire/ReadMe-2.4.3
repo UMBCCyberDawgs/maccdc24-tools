@@ -1,0 +1,144 @@
+What's new in Open Source Tripwire 2.4.3.x:
+
+* Useful ‘install-strip’, ‘check’, ‘uninstall’ & ‘distcheck’ make targets as of OST 2.4.3.5.  Check target invokes both the test-harness framework and twtest unit tests.
+
+* Verify OST builds without errors w/ GCC 7.0.x; fix new warnings from the new compiler, including deprecation warnings; use std::unique_ptr instead of std::auto_ptr where available.
+
+* Add ‘--disable-extrawarnings’ configure option, for old compilers that don’t support the ’-Wextra’ compile option.
+
+* Clean up unit tests, enable various disabled tests, make results more useful.
+
+* Additional cleanup due to static analysis tool results (CppCheck, Flawfinder, Clang analyzer).
+
+* OST now includes optional iconv support when configured with --enable-iconv.
+When enabled, binary database & report files store paths as UTF-16, making these files more
+portable across machines with different character encodings.  This is disabled by default
+for the sake of compatibility with existing db & report files.
+
+* Use posix_fadvise (or equivalent) to avoid filling system disk cache with files we've already
+read and aren't about to read again.  Also use O_NOATIME where available, to avoid updating
+file access times when we read a file.  Add an optional new config param "HASH_DIRECT_IO" to use 
+direct i/o when hashing files.  This doesn't seem to be any faster than normal i/o, but 
+including it anyway due to user request.
+
+* Add a new config file option RESOLVE_IDS_TO_NAMES to control whether we try to
+resolve uid/gid values to user & group names.  Static binaries are known to segfault when
+doing this given certain nsswitch.conf setups (particularly LDAP/AD), so setting this
+to false bypasses name resolution and just displays the numeric uid/gid.
+
+* Add a new optional --key-size argument to twadmin --generate-keys mode, with available
+sizes of 1024 or 2048 bits.  Previously twadmin always created 1024-bit El Gamal keys,
+and this remains the default if --key-size is not specified, at least for the time being.
+
+* Fix a compilation issue with C++11 and -Werror=terminate.
+
+* Move build files to automake 1.15, and make a few build system fixes: "make dist" now
+works properly, cross-compiled binaries can now compile with OpenSSL if available, and
+specifying a build directory outside the source dir now works as expected.
+
+* Assorted platform tweaks:  Add DOS/FreeDOS + DJGPP as a new platform; support Cygwin
+//host/share/path syntax for UNC paths; passphrase & tempfile fixes for AROS.
+
+* This update fixes compilation errors on modern compilers (GCC 4.7+ and LLVM/clang), 
+as well as some additional errors encountered on various platforms.  This is intended
+to supersede patches against 2.4.2.x, e.g. http://www.linuxfromscratch.org/blfs/view/svn/postlfs/tripwire.html
+and the additional changes in the FreeBSD ports tree: http://svnweb.freebsd.org/ports/head/security/tripwire/
+
+* This update also fixes handling of SHA hashes, which appears to have broken when 
+someone added support for using OpenSSL's hash algorithms vs. the ones in the OST tree.
+This resulted in SHA hashes always being reported as 'AAAAAAAAAAAAAAAAA'.  This is 
+now fixed for both with- and without-OpenSSL builds.
+
+* The 2.4.3 tree no longer contains an RPM spec file. Instead, the 'Packaging' file
+points at where current RPM, Debian, & other package configs can be obtained.
+
+* The 'touchconfig.sh' script bumps file timestamps to prevent spurious make errors
+(usually about a missing aclocal-1.8) on a fresh clone/untar/etc., which occur due
+to all files in the tree initially having the same timestamps. The only case where 
+an 'autoreconf -i' is actually required is on SkyOS 5, where SIZEOF_LONG_LONG gets 
+defined incorrectly otherwise.
+
+* Imported a set of contributed scripts from 2.4.2.3 fork (github.com/steakknife/tripwire)
+
+* Fixed large file (>2GB) support for various platforms, including 32-bit Linux.
+
+* Added '-h' argument to display hashes as hex instead of base64 (siggen already allowed this)
+
+* Added the long-requested MAILFROMADDRESS config param for email reporting.
+
+
+
+The update has been tested on a variety of platforms: 
+
+Linuxes
+- Alpine Linux 3.3.3 + gcc 5.3.0
+- Alpine Linux 3.5.1 + gcc 6.2.1
+- Arch Linux 232 + gcc 6.3.1
+- Amazon Linux AMI 2016.09 + gcc 4.8.3
+- Android 6.0 (arm) + gcc 4.9 (NDK)
+- CentOS 7 (amd64) + gcc 4.8.5
+- Fedora 24 Alpha 7 (amd64) + gcc 6.0.0
+- Fedora 27 Rawhide (amd64) + gcc 7.0.1
+- Raspbian 7 (wheezy) (armv6l) + gcc 4.6.3
+- RHEL 3.4 (Itanium) + gcc 3.4.3
+- RHEL 6.0 (powerpc64) + gcc 4.4.4
+- openSuSE Tumbleweed (20160408) (i586) + gcc 5.3.1
+- Oracle Linux 6.8 + gcc 4.4.7
+- Ubuntu 14.0.4 (amd64) + gcc 4.x
+- Ubuntu 16.0.4 (amd64) + gcc 5.4.0
+- Wind River Pulsar Linux 8 + gcc 5.2.0
+
+OSX
+- Mac OS X 10.11 + LLVM 7.0.2 / clang-700.1.81
+
+BSDs
+- FreeBSD 10.2 (amd64) + LLVM/clang
+- OpenBSD 5.8 (amd64 & x86) + gcc 4.2.1
+- NetBSD 6.0 (x86) + gcc 4.5.1
+- DragonflyBSD 4.4.2 + gcc 5.2.1
+- MidnightBSD 0.7 + gcc 4.2.1
+- HardenedBSD 11.0 + gcc 4.8.5
+
+UNIXes
+- Solaris 10 SPARC + gcc 3.4.6
+- Solaris 10 x86 + gcc 3.4.3
+- OpenIndiana 151 + gcc 4.8.5
+- AIX 5.2 + gcc 4.3.1
+- HP-UX 11.23 + gcc 4.2.3
+
+Other
+- Minix 3.3.0 + LLVM/clang
+- Debian GNU/Hurd 0.6 + gcc 4.9.2
+- Cygwin 2.4.1 (amd64) + gcc 5.3.0
+- Haiku R1 Alpha 4 + gcc 4
+- Syllable 0.67 + gcc 4.1.2
+- SkyOS 5 (beta 6947) + gcc 4.1.1
+- Sortix 1.0 + gcc 5.3.0
+- Icaros 2.1 (AROS) + gcc 4.6.4
+- MiNT 1.17 (Atari ST/TT) + gcc 4.6.4
+- FreeDOS 1.1 + gcc 6.1.0 (DJGPP)
+
+Building Notes:
+
+* The '--enable-static' configure argument is not guaranteed to work on all
+platforms (it's known not to work on MacOS, for instance) and your mileage may vary. 
+And when it works, it may not be doing what you expect. For example, even if 
+a program is statically linked with glibc, the static glibc code may still load 
+shared libraries behind the scenes, for things like iconv character conversion 
+and nsswitch name lookups.  
+
+* The build system currently doesn't autodetect clang at configure time 
+(though it detects llvm-gcc).  To use clang, you'll need to set CC and CXX to 
+point at clang and clang++ before configuring & building.
+
+* The default compile flags don't include hardening options such as creating
+PIE (Position-Independent Executable) binaries. To set these, you'll want to
+set CFLAGS/CXXFLAGS/LDFLAGS by hand before running 'configure', or use a tool
+such as dpkg-buildflags to set them to recommended values.
+
+* Older versions of Open Source Tripwire reportedly do not build on Tru64 UNIX.
+This is likely to be true with 2.4.3 as well, due to the lack of appropriate
+hardware to test it on. If anyone out there has a Tru64 box and wants to fix 
+this, patches are always welcome.
+ 
+

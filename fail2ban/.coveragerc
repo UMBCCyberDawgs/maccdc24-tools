@@ -1,0 +1,12 @@
+
+[run]
+branch = True
+source =
+    config
+    fail2ban
+
+[report]
+exclude_lines =
+    pragma: ?no ?cover
+    pragma: ?${F2B_PY}.x no ?cover
+    pragma: ?systemd no ?cover

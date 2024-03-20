@@ -1,0 +1,25 @@
+# General
+.vs/
+build/
+artifacts/
+packages/
+vcpkg/
+*.user
+*.filters
+*.cache
+*.bak
+*.lib
+*.aps
+
+# BLUESPAWN-win-client
+BLUESPAWN-win-client/external/
+BLUESPAWN-win-client/resources/severe
+BLUESPAWN-win-client/resources/severe2
+BLUESPAWN-win-client/resources/indicators
+
+# BLUESPAWN Project Site - docs/
+*.lock
+docs/db.sqlite3
+__pycache__/
+docs/media/scans/
+docs/*/migrations/
